@@ -1,4 +1,7 @@
 {
     "name": "noonpacificfeed",
-    "alias": "noonpacificfeed"
+    "alias": "noonpacificfeed",
+    "github": {
+        "autoAlias": false
+    }
 }
