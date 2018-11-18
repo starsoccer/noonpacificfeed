@@ -1,7 +1,7 @@
 import { IMixtape, ITrack, ITrackWithDate } from './src/types';
 import getMixtapes from './src/getMixtapes';
 import { Feed } from 'feed';
-import mixtapeToFeed from './src/MixtapeToFeed';
+import mixtapeToFeed from './src/mixtapeToFeed';
 import getTracksByMixtape from './src/getTracksByMixtape';
 import tracksToFeed from './src/tracksToFeed';
 import * as dotenv from 'dotenv';
