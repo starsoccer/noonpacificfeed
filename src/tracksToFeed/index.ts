@@ -1,5 +1,5 @@
 import { Feed } from 'feed';
-import { ITrack, ITrackWithDate } from '../types';
+import { ITrackWithDate } from '../types';
 
 export default function tracksToFeed (tracks: ITrackWithDate[], feed: Feed) {
     for (const track of tracks) {
