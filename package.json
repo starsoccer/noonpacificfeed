@@ -4,14 +4,20 @@
   "description": "noon pacific rss feed",
   "main": "index.js",
   "scripts": {
+    "start": "npm run build && node index.js",
+    "build": "tsc -p configs/tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "starsoccer",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^6.1.0",
+    "feed": "^2.0.1",
     "got": "^9.3.2"
   },
   "devDependencies": {
-    "@types/got": "^9.2.0"
+    "@types/dotenv": "^6.1.0",
+    "@types/got": "^9.2.0",
+    "typescript": "^3.1.6"
   }
 }
