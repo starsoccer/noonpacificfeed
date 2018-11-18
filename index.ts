@@ -1,39 +1,80 @@
-import { IMixtape } from './src/types';
-import { getMixtapes } from './src/getMixtapes';
+import { IMixtape, ITrack, ITrackWithDate } from './src/types';
+import getMixtapes from './src/getMixtapes';
 import { Feed } from 'feed';
-import { mixtapeToFeed } from './src/MixtapeToFeed';
+import mixtapeToFeed from './src/MixtapeToFeed';
+import getTracksByMixtape from './src/getTracksByMixtape';
+import tracksToFeed from './src/tracksToFeed';
 import * as dotenv from 'dotenv';
+import * as Koa from 'koa';
+import * as Router from 'koa-router';
+import * as cron from 'cron';
 
 dotenv.config();
+const CronJob = cron.CronJob;
+const mixtapes: IMixtape[] = [];
+const tracks : ITrackWithDate[] = [];
+const feedData = {
+    feed: '',
+    title: "NoonPacific",
+    description: "Noonpacific rss feed",
+    id: "https://noonpacific.com/",
+    link: "https://noonpacific.com/",
+    image: "https://noonpacific.com/images/logo.svg",
+    favicon: "https://noonpacific.com/favicon.png",
+    copyright: "",
+    generator: "", // optional, default = 'Feed for Node.js'
+    feedLinks: {
+      json: "https://example.com/json",
+      atom: "https://example.com/atom"
+    }
+};
 
-async function test() {
-    const clientID = process.env.Client || '';
-    const mixtapes: IMixtape[] = await getMixtapes(clientID).catch((err) => {
+// Setup cron job
+new CronJob('0 0 */3 * * *', getNewMixtapes, undefined, true, 'America/Los_Angeles', undefined, true);
+
+async function getNewMixtapes() {
+    const newMixtapes: IMixtape[] = await getMixtapes().catch((err) => {
         console.log(err); return [];
     });
-    const feed = new Feed({
-        feed: '',
-        title: "Feed Title",
-        description: "This is my personal feed!",
-        id: "http://example.com/",
-        link: "http://example.com/",
-        image: "http://example.com/image.png",
-        favicon: "http://example.com/favicon.ico",
-        copyright: "All rights reserved 2013, John Doe",
-        updated: new Date(2013, 6, 14), // optional, default = today
-        generator: "awesome", // optional, default = 'Feed for Node.js'
-        feedLinks: {
-          json: "https://example.com/json",
-          atom: "https://example.com/atom"
-        },
-        author: {
-          name: "John Doe",
-          email: "johndoe@example.com",
-          link: "https://example.com/johndoe"
+    newMixtapes.forEach( async (newMixtape) => {
+        const mixtapesWithMatchingIDs = mixtapes.filter((mixtape) => mixtape.id === newMixtape.id);
+        if (mixtapesWithMatchingIDs.length === 0) {
+            const newTracks = await getTracksByMixtape(newMixtape.id.toString()).catch((err) => {
+                console.log(err); return [] as ITrack[];
+            });
+            newTracks.forEach((track) => tracks.push({
+                ...track,
+                date: new Date(newMixtape.created / 1000),
+            }));
+            mixtapes.push(newMixtape);
         }
     });
-    mixtapeToFeed(mixtapes, feed);
-    console.log(feed.rss2());
 }
 
-test();
+
+const app = new Koa();
+const router = new Router();
+
+router.get('/mixtapes', async (ctx) => {
+    const mixtapeFeed = new Feed(feedData);
+    mixtapeToFeed(mixtapes, mixtapeFeed);
+    ctx.body = mixtapeFeed.rss2();
+});
+
+router.get('/tracks', async (ctx) => {
+    const tracksFeed = new Feed(feedData);
+    tracksToFeed(tracks, tracksFeed);
+    ctx.body = tracksFeed.rss2();
+});
+
+
+router.get('/debug', async () => {
+    console.log(tracks);
+});
+
+
+app.use(router.routes());
+
+app.listen(3000);
+
+

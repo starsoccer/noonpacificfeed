@@ -1,7 +1,7 @@
 import { Feed } from 'feed';
 import { IMixtape } from '../types';
 
-export function mixtapeToFeed (mixtapes: IMixtape[], feed: Feed) {
+export default function mixtapeToFeed (mixtapes: IMixtape[], feed: Feed) {
     for (const mixtape of mixtapes) {
         feed.addItem({
             title: mixtape.title,
