@@ -1,0 +1,17 @@
+{
+  "name": "noonpacificfeed",
+  "version": "0.0.1",
+  "description": "noon pacific rss feed",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "starsoccer",
+  "license": "ISC",
+  "dependencies": {
+    "got": "^9.3.2"
+  },
+  "devDependencies": {
+    "@types/got": "^9.2.0"
+  }
+}
