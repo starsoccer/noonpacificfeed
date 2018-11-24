@@ -4,6 +4,7 @@
   "description": "noon pacific rss feed",
   "main": "index.js",
   "scripts": {
+    "now-start": "node index.js",
     "start": "npm run build && node index.js",
     "build": "tsc -p configs/tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
