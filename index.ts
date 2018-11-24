@@ -9,7 +9,9 @@ import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import * as cron from 'cron';
 
-dotenv.config();
+if (!process.env.NOW) {
+    dotenv.config();
+}
 const CronJob = cron.CronJob;
 const mixtapes: IMixtape[] = [];
 const tracks : ITrackWithDate[] = [];
