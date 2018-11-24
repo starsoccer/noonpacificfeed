@@ -5,5 +5,8 @@
     ],
     "env": {
         "clientID": "@clientid"
-    }
+    },
+    "routes": [
+        { "src": "*", "dest": "/index.js" }
+    ]
 }
