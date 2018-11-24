@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+  - "lts/*"
+script:
+  - npm run start
+cache:
+  directories:
+    - "node_modules"
+before_deploy:
+  - npm install now --no-save
+  - now remove noonpacificfeed --safe --yes --team NoonPacificFeed --token $NOW_TOKEN || true
+deploy:
+  - provider: script
+    script: now --name noonpacificfeed --public --team NoonPacificFeed --token $NOW_TOKEN && now alias noonpacificfeed --team NoonPacificFeed --token $NOW_TOKEN
+    skip_cleanup: true
+    on:
+      master: true
