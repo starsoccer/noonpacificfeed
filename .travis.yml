@@ -9,11 +9,10 @@ cache:
 before_deploy:
   - npm install now --no-save
   - now remove noonpacificfeed --safe --yes --team noonpacificfeed --token $NOW_TOKEN || true
+  - now -e Client="$CLIENTID" --token $NOW_TOKEN
 deploy:
   - provider: script
-    script: 
-      - now -e Client="$CLIENTID"
-      - now --name noonpacificfeed --public --team noonpacificfeed --token $NOW_TOKEN && now alias noonpacificfeed --team noonpacificfeed --token $NOW_TOKEN
+    script: now --name noonpacificfeed --public --team noonpacificfeed --token $NOW_TOKEN && now alias noonpacificfeed --team noonpacificfeed --token $NOW_TOKEN
     skip_cleanup: true
     on:
       master: true
