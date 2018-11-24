@@ -4,6 +4,6 @@
       { "src": "*.js", "use": "@now/node" }
     ],
     "env": {
-        "CLIENT": "@clientid"
+        "clientID": "@clientid"
     }
 }

@@ -3,7 +3,7 @@ import { IMixtape } from '../types';
 
 export default async function getMixtapes(): Promise<IMixtape[]> {
     const mixtapes = await got('https://beta.whitelabel.cool/api/mixtapes/', {headers: {
-        Client:  process.env.Client || '',
+        Client:  process.env.clientID || '',
     }});
     if (mixtapes.statusCode === 200) {
         try {
