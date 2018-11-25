@@ -1,10 +1,15 @@
 import * as got from 'got';
 import { IMixtape } from '../types';
 
-export default async function getMixtapes(): Promise<IMixtape[]> {
-    const mixtapes = await got('https://beta.whitelabel.cool/api/mixtapes/', {headers: {
-        Client:  process.env.clientID || '',
-    }});
+export default async function getMixtapes(collectionID: number): Promise<IMixtape[]> {
+    const mixtapes = await got('https://beta.whitelabel.cool/api/mixtapes/', {
+        headers: {
+            Client:  process.env.clientID || '',
+        },
+        query: {
+            collection: collectionID,
+        }
+    });
     if (mixtapes.statusCode === 200) {
         try {
             const mixtapesJSON = JSON.parse(mixtapes.body);

@@ -2,7 +2,7 @@ import * as got from 'got';
 import { ITrack } from '../types';
 
 export default async function getTracksByMixtape(mixtapeID: string): Promise<ITrack[]> {
-    const mixtapes = await got('https://beta.whitelabel.cool/api/tracks/?mixtape=noon-305', {
+    const mixtapes = await got('https://beta.whitelabel.cool/api/tracks/', {
         headers: {
             Client: process.env.clientID || '',
         },

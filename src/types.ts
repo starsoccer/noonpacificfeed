@@ -34,6 +34,20 @@ export interface ITrack {
     order: number;
 }
 
-export interface ITrackWithDate extends ITrack {
+export interface IEnhancedTrack extends ITrack {
     date: Date;
+    mixtapeName: string;
+}
+
+export interface ICollection {
+    id: number;
+    title: string;
+    slug: string;
+    description: string;
+    artwork_url: string;
+    artwork_credit: string;
+    artwork_credit_url: string;
+    created: number;
+    modified: number;
+    mixtape_count: number;
 }

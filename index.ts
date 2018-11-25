@@ -1,20 +1,35 @@
-import { IMixtape, ITrack, ITrackWithDate } from './src/types';
+import { IMixtape, ITrack, IEnhancedTrack, ICollection } from './src/types';
 import getMixtapes from './src/getMixtapes';
+import getCollections from './src/getCollections';
 import { Feed } from 'feed';
 import mixtapeToFeed from './src/mixtapeToFeed';
 import getTracksByMixtape from './src/getTracksByMixtape';
 import tracksToFeed from './src/tracksToFeed';
+import sortTracks from './src/sortTracks';
 import * as dotenv from 'dotenv';
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import * as cron from 'cron';
 
-if (!process.env.NOW) {
-    dotenv.config();
+dotenv.config();
+
+const collections: ICollection[] = [];
+
+async function addCollections() {
+    const collectionsToAdd: ICollection[] = await getCollections();
+    collectionsToAdd.forEach((collection) => {
+        collections.push(collection);
+    });
+    // Setup cron job
+    new CronJob('0 0 */3 * * *', getNewMixtapes, undefined, true, 'America/Los_Angeles', undefined, true);  
 }
+
+addCollections();
+
 const CronJob = cron.CronJob;
 const mixtapes: IMixtape[] = [];
-const tracks : ITrackWithDate[] = [];
+const tracks : IEnhancedTrack[] = [];
+let lastUpdated: Date;
 const feedData = {
     feed: '',
     title: "NoonPacific",
@@ -31,26 +46,35 @@ const feedData = {
     }
 };
 
-// Setup cron job
-new CronJob('0 0 */3 * * *', getNewMixtapes, undefined, true, 'America/Los_Angeles', undefined, true);
-
 async function getNewMixtapes() {
-    const newMixtapes: IMixtape[] = await getMixtapes().catch((err) => {
-        console.log(err); return [];
-    });
-    newMixtapes.forEach( async (newMixtape) => {
-        const mixtapesWithMatchingIDs = mixtapes.filter((mixtape) => mixtape.id === newMixtape.id);
-        if (mixtapesWithMatchingIDs.length === 0) {
-            const newTracks = await getTracksByMixtape(newMixtape.id.toString()).catch((err) => {
-                console.log(err); return [] as ITrack[];
-            });
-            newTracks.forEach((track) => tracks.push({
-                ...track,
-                date: new Date(newMixtape.created / 1000),
-            }));
-            mixtapes.push(newMixtape);
+    const unsortedMixtapes: IMixtape[] = [];
+    const unsortedTracks: IEnhancedTrack[] = [];
+    for (const collection of collections) {
+        const newMixtapes: IMixtape[] = await getMixtapes(collection.id).catch((err) => {
+            console.log(err); return [];
+        });
+        for (const newMixtape of newMixtapes) {
+            const mixtapesWithMatchingIDs: IMixtape[] = mixtapes.filter((mixtape) => mixtape.id === newMixtape.id);
+            if (mixtapesWithMatchingIDs.length === 0) {
+                const newTracks: ITrack[] = await getTracksByMixtape(newMixtape.id.toString()).catch((err) => {
+                    console.log(err); return [] as ITrack[];
+                });
+                for (const track of newTracks) {
+                    unsortedTracks.push({
+                        ...track,
+                        date: new Date(newMixtape.created),
+                        mixtapeName: newMixtape.title
+                    });
+                }
+                unsortedMixtapes.push(newMixtape);
+            }
         }
-    });
+    }
+    const sortedTracks: IEnhancedTrack[] = sortTracks(unsortedTracks);
+    const sortedMixtapes: IMixtape[] = unsortedMixtapes;
+    sortedTracks.reverse().forEach((track) => tracks.push(track));
+    sortedMixtapes.forEach((mixtape) => mixtapes.push(mixtape));
+    lastUpdated = new Date();
 }
 
 
@@ -69,14 +93,13 @@ router.get('/tracks', async (ctx) => {
     ctx.body = tracksFeed.rss2();
 });
 
-
-router.get('/debug', async () => {
-    console.log(tracks);
+router.get('/status', async (ctx) => {
+    ctx.body = `Last update ${lastUpdated}`;
 });
 
 
 app.use(router.routes());
 
-app.listen(3000);
+app.listen(80);
 
 

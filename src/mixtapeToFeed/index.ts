@@ -9,7 +9,7 @@ export default function mixtapeToFeed (mixtapes: IMixtape[], feed: Feed) {
             link: 'https://noonpacific.com/los-angeles/' + mixtape.slug,
             description: mixtape.description,
             content: mixtape.description,
-            date: new Date(mixtape.created / 1000),
+            date: new Date(mixtape.created),
             image: mixtape.artwork_url,
         });
     }
