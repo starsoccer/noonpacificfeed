@@ -4,7 +4,7 @@ import { IMixtape } from '../types';
 export default async function getMixtapes(collectionID: number): Promise<IMixtape[]> {
     const mixtapes = await got('https://beta.whitelabel.cool/api/mixtapes/', {
         headers: {
-            Client:  process.env.clientID || '',
+            Client:  process.env.CLIENTID || '',
         },
         query: {
             collection: collectionID,

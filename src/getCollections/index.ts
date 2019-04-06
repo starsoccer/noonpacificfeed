@@ -4,7 +4,7 @@ import { ICollection } from '../types';
 export default async function getCollections(): Promise<ICollection[]> {
     const collections = await got('https://beta.whitelabel.cool/api/collections/', {
         headers: {
-            Client:  process.env.clientID || '',
+            Client:  process.env.CLIENTID || '',
         }
     });
     if (collections.statusCode === 200) {
