@@ -15,7 +15,7 @@
     "dotenv": "^8.1.0",
     "feed": "^4.0.0",
     "got": "^9.6.0",
-    "koa": "^2.7.0",
+    "koa": "^2.8.1",
     "koa-router": "^7.4.0"
   },
   "devDependencies": {
