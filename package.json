@@ -11,7 +11,7 @@
   "author": "starsoccer",
   "license": "ISC",
   "dependencies": {
-    "cron": "^1.7.1",
+    "cron": "^1.7.2",
     "dotenv": "^8.1.0",
     "feed": "^4.0.0",
     "got": "^9.6.0",
