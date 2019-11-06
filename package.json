@@ -21,7 +21,7 @@
   "devDependencies": {
     "@types/cron": "^1.7.1",
     "@types/dotenv": "^8.2.0",
-    "@types/got": "^9.6.8",
+    "@types/got": "^9.6.9",
     "@types/koa": "^2.0.51",
     "@types/koa-router": "^7.0.42",
     "typescript": "^3.6.4"
