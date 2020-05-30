@@ -11,18 +11,19 @@
   "author": "starsoccer",
   "license": "ISC",
   "dependencies": {
-    "cron": "^1.7.1",
-    "dotenv": "^8.0.0",
+    "cron": "^1.7.2",
+    "dotenv": "^8.2.0",
     "feed": "^4.0.0",
     "got": "^9.6.0",
-    "koa": "^2.7.0",
+    "koa": "^2.11.0",
     "koa-router": "^7.4.0"
   },
   "devDependencies": {
+    "@architect/sandbox": "^1.12.0",
     "@types/cron": "^1.7.1",
-    "@types/dotenv": "^6.1.1",
-    "@types/got": "^9.6.5",
-    "@types/koa": "^2.0.49",
+    "@types/dotenv": "^8.2.0",
+    "@types/got": "^9.6.9",
+    "@types/koa": "^2.11.0",
     "@types/koa-router": "^7.0.42",
     "typescript": "^3.9.3"
   }
